@@ -1,44 +1,42 @@
 package com.example.categories.models.entities;
-import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Categories")
-public class Categorie {
+@Table(name = "categories", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50) 
-    @NotBlank(message = "Name cannot be empty")
-    @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
+    @Column(nullable = false, length = 50, unique = true)
     private String name;
 
     @Column(length = 255)
-    @Size(max = 255, message = "Description cannot exceed 255 characters")
     private String description;
-    @Column(nullable = false, updatable = false) 
-    private LocalDateTime dateCreation;
-    public Categorie() {
 
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public Categorie(Long id, String name, String description) {
+    public Category() { }
+
+    public Category(Long id, String name, String description, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
@@ -55,4 +53,7 @@ public class Categorie {
         this.description = description;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
