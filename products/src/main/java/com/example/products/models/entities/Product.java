@@ -1,8 +1,8 @@
 package com.example.products.models.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.*;
 
 @Entity    //reconoce esto como entidad para base de datos
@@ -12,21 +12,29 @@ public class Product {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
+    @NotNull
+    @DecimalMin(value = "0.01")
     private double price;
+    @NotNull
+    @NotNull(message = "Category ID cannot be null")
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 
 
     public Product() {
 
     }
 
-    public Product(Long id, String name, String description, double price) {
+    public Product(Long id, String name, String description, double price, Long categoryId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.categoryId = categoryId;
     }
 
     public Long getId() {
@@ -61,8 +69,13 @@ public class Product {
         this.price = price;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     
 }
-
-
-

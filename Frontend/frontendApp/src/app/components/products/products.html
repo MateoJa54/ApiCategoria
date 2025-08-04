@@ -1,0 +1,108 @@
+<div class="category-container">
+    <h2>Productos</h2>
+
+    <button class="btn btn-create mb" (click)="openCreateModal()">
+    <span class="icon">➕</span> Agregar Producto
+  </button>
+
+    <div class="table-wrapper">
+        <table class="category-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th class="actions-col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of displayedProducts" class="table-row">
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.description }}</td>
+                    <td>${{ p.price.toFixed(2) }}</td>
+                    <td class="actions-col">
+                        <button (click)="openEditModal(p)" class="btn-icon btn-edit" title="Editar">
+              <span class="icon">✏️</span>
+            </button>
+                        <button (click)="onDelete(p.id!)" class="btn-icon btn-delete" title="Borrar">
+              <span class="icon">🗑️</span>
+            </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination">
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&laquo; Anterior</button>
+        <span>Página {{currentPage}} de {{totalPages}}</span>
+        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Siguiente &raquo;</button>
+    </div>
+
+    <!-- Modal Crear -->
+    <div class="modal-backdrop" *ngIf="showCreateModal">
+        <div class="modal">
+            <h3>Nuevo Producto</h3>
+            <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+            <form [formGroup]="newForm" (ngSubmit)="onCreate()">
+                <input formControlName="name" placeholder="Nombre" />
+                <div *ngIf="newForm.get('name')?.touched && newForm.get('name')?.invalid" class="field-error">
+                    <span *ngIf="newForm.get('name')?.errors?.['required']">El nombre es obligatorio.</span>
+                </div>
+                <input formControlName="description" placeholder="Descripción" />
+                <div *ngIf="newForm.get('description')?.touched && newForm.get('description')?.invalid" class="field-error">
+                    <span *ngIf="newForm.get('description')?.errors?.['required']">La descripción es obligatoria.</span>
+                </div>
+
+                <input type="number" formControlName="price" placeholder="Precio" />
+                <div *ngIf="newForm.get('price')?.touched && newForm.get('price')?.invalid" class="field-error">
+                    <span *ngIf="newForm.get('price')?.errors?.['required']">El precio es obligatorio.</span>
+                    <span *ngIf="newForm.get('price')?.errors?.['min']">El precio debe ser mayor a 0.</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" [disabled]="newForm.invalid" class="btn btn-save">
+            <span class="icon">💾</span> Guardar
+          </button>
+                    <button type="button" (click)="closeCreateModal()" class="btn btn-cancel">
+            <span class="icon">✖️</span> Cancelar
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Editar -->
+    <div class="modal-backdrop" *ngIf="showEditModal">
+        <div class="modal">
+            <h3>Editar Producto #{{ editingProduct?.id }}</h3>
+            <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+            <form [formGroup]="editForm" (ngSubmit)="onUpdate()">
+                <input formControlName="name" placeholder="Nombre" />
+                <div *ngIf="newForm.get('name')?.touched && newForm.get('name')?.invalid" class="field-error">
+                    <span *ngIf="newForm.get('name')?.errors?.['required']">El nombre es obligatorio.</span>
+                </div>
+                <input formControlName="description" placeholder="Descripción" />
+                <div *ngIf="newForm.get('description')?.touched && newForm.get('description')?.invalid" class="field-error">
+                    <span *ngIf="newForm.get('description')?.errors?.['required']">La descripción es obligatoria.</span>
+                </div>
+
+                <input type="number" formControlName="price" placeholder="Precio" />
+                <div *ngIf="newForm.get('price')?.touched && newForm.get('price')?.invalid" class="field-error">
+                    <span *ngIf="newForm.get('price')?.errors?.['required']">El precio es obligatorio.</span>
+                    <span *ngIf="newForm.get('price')?.errors?.['min']">El precio debe ser mayor a 0.</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" [disabled]="editForm.invalid" class="btn btn-save">
+            <span class="icon">💾</span> Guardar
+          </button>
+                    <button type="button" (click)="closeEditModal()" class="btn btn-cancel">
+            <span class="icon">✖️</span> Cancelar
+          </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<div class="product-container">
+    <h2>Categorías</h2>
+
+    <button class="btn btn-create mb" (click)="openCreateModal()">
+    <span class="icon">➕</span> Agregar Categoría
+  </button>
+
+    <div class="table-wrapper">
+        <table class="product-table category-table">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                        <button class="sort-btn" (click)="toggleSort()" [title]="sortAsc ? 'Descendente' : 'Ascendente'">
+              {{ sortAsc ? '⬆️' : '⬇️' }}
+            </button>
+                    </th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Creado</th>
+                    <th class="actions-col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let c of displayedCategories" class="table-row">
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.name }}</td>
+                    <td>{{ c.description }}</td>
+                    <td>{{ c.createdAt | date:'short' }}</td>
+                    <td class="actions-col">
+                        <button (click)="openEditModal(c)" class="btn-icon btn-edit" title="Editar">
+              <span class="icon">✏️</span>
+            </button>
+                        <button (click)="onDelete(c.id!)" class="btn-icon btn-delete" title="Borrar">
+              <span class="icon">🗑️</span>
+            </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <button (click)="goToPage(currentPage-1)" [disabled]="currentPage===1">&laquo; Anterior</button>
+        <span>Página {{ currentPage }} de {{ totalPages }}</span>
+        <button (click)="goToPage(currentPage+1)" [disabled]="currentPage===totalPages">Siguiente &raquo;</button>
+    </div>
+    <!-- Dentro de Modal Crear -->
+    <div class="modal-backdrop" *ngIf="showCreateModal">
+        <div class="modal">
+            <h3>Nueva Categoría</h3>
+            <!-- Alerta de error o éxito -->
+            <div *ngIf="errorMessage" class="alert alert-error">
+                {{ errorMessage }}
+            </div>
+            <form [formGroup]="newForm" (ngSubmit)="onCreate()">
+                <input formControlName="name" placeholder="Nombre" />
+                <div *ngIf="newForm.get('name')?.invalid && newForm.get('name')?.touched" class="field-error">
+                    El nombre es obligatorio (3–50 caracteres).
+                </div>
+                <input formControlName="description" placeholder="Descripción (opcional)" />
+                <div *ngIf="editForm.get('description')?.hasError('maxlength') && editForm.get('description')?.touched" class="field-error">
+                    La descripción no debe pasar de 255 caracteres.
+                </div>
+
+
+                <div class="modal-actions">
+                    <button type="submit" [disabled]="newForm.invalid" class="btn btn-save">
+          <span class="icon">💾</span> Guardar
+        </button>
+                    <button type="button" (click)="closeCreateModal()" class="btn btn-cancel">
+          <span class="icon">✖️</span> Cancelar
+        </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dentro de Modal Editar -->
+    <div class="modal-backdrop" *ngIf="showEditModal">
+        <div class="modal">
+            <h3>Editar Categoría #{{ editingCategory?.id }}</h3>
+            <div *ngIf="errorMessage" class="alert alert-error">
+                {{ errorMessage }}
+            </div>
+            <form [formGroup]="editForm" (ngSubmit)="onUpdate()">
+                <input formControlName="name" placeholder="Nombre" />
+                <div *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched" class="field-error">
+                    El nombre es obligatorio (3–50 caracteres).
+                </div>
+                <input formControlName="description" placeholder="Descripción (opcional)" />
+                <div *ngIf="editForm.get('description')?.hasError('maxlength') && editForm.get('description')?.touched" class="field-error">
+                    La descripción no debe pasar de 255 caracteres.
+                </div>
+
+
+                <div class="modal-actions">
+                    <button type="submit" [disabled]="editForm.invalid" class="btn btn-save">
+          <span class="icon">💾</span> Guardar
+        </button>
+                    <button type="button" (click)="closeEditModal()" class="btn btn-cancel">
+          <span class="icon">✖️</span> Cancelar
+        </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
