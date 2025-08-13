@@ -18,10 +18,10 @@ public class Product {
     private String description;
     @NotNull
     @DecimalMin(value = "0.01")
-    private double price;
-    @NotNull
-    @NotNull(message = "Category ID cannot be null")
-    @Column(name = "category_id", nullable = false)
+    private Double price;
+
+    
+    @Column(name = "category_id", nullable = true)
     private Long categoryId;
 
 
@@ -29,7 +29,7 @@ public class Product {
 
     }
 
-    public Product(Long id, String name, String description, double price, Long categoryId) {
+    public Product(Long id, String name, String description, Double price, Long categoryId) {
         this.id = id;
         this.name = name;
         this.description = description;

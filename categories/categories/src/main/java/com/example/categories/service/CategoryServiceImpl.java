@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.categories.models.entities.Category;
+import com.example.categories.models.Category;
 import com.example.categories.repositories.CategoryRepository;
 
 @Service

@@ -1,24 +1,15 @@
-FROM openjdk:17-jdk-alpine as builder
-
+FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+COPY src ./src
+RUN mvn -B -DskipTests package
 
-COPY ./pom.xml /app
-COPY ./.mvn ./.mvn
-COPY ./mvnw ./mvnw
-COPY ./pom.xml ./pom.xml
-
-RUN ./mvnw clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
-#RUN ./mvnw dependency:go-offline
-COPY ./src ./src
-
-RUN ./mvnw clean package -DskipTests
-
-FROM openjdk:17-jdk-alpine
-
+FROM openjdk:17-jdk-slim
 WORKDIR /app
-RUN mkdir ./logs
-COPY --from=builder /app/target/products-0.0.1-SNAPSHOT.jar .
+COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE $PORT
+ENV PORT=8083
+EXPOSE 8083
 
-ENTRYPOINT ["java", "-jar", "products-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar /app/app.jar"]

@@ -1,40 +1,50 @@
-
+version: "3.8"
 services:
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: admin123
       MYSQL_DATABASE: test
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: appuserpass
     volumes:
       - db_data:/var/lib/mysql
+    restart: unless-stopped
 
   app-categories:
-    image: mateoja54/app-categories:v1
+    image: mateoja54/app-categories:v2
     environment:
+      PORT: 8082
       DB_HOST: db
       DB_PORT: 3306
-      PORT: 8082
+      DB_DATABASE: test
+      DB_USER: appuser
+      DB_PASSWORD: appuserpass
     depends_on:
       - db
-    restart: on-failure
+    restart: unless-stopped
 
   app-products:
-    image: mateoja54/app-products:latest
+    image: mateoja54/app-products:v3
     environment:
+      PORT: 8083
       DB_HOST: db
       DB_PORT: 3306
-      PORT: 8083
+      DB_DATABASE: test
+      DB_USER: appuser
+      DB_PASSWORD: appuserpass
     depends_on:
       - db
-    restart: on-failure
+    restart: unless-stopped
 
   frontend:
-    image: mateoja54/app-frontend:v1
+    image: mateoja54/app-frontend:v2
     ports:
       - "80:80"
     depends_on:
       - app-categories
       - app-products
+    restart: unless-stopped
 
 volumes:
   db_data:

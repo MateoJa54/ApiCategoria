@@ -1,6 +1,6 @@
 package com.example.categories.controllers;
 
-import com.example.categories.models.entities.Category;
+import com.example.categories.models.Category;
 import com.example.categories.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
 
     private final CategoryService categoryService;

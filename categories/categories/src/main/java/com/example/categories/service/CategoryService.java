@@ -3,7 +3,7 @@ package com.example.categories.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.categories.models.entities.Category;
+import com.example.categories.models.Category;
 
 public interface CategoryService {
     List<Category> getAllCategories();

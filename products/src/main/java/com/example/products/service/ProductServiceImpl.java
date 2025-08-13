@@ -35,24 +35,24 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.findById(id);
     }
 
-    @Override
-    public Product createProduct(Product product) {
-         if (product.getCategoryId() == null) {
-            throw new IllegalArgumentException("Category ID cannot be null");
-        }
-
+   @Override
+public Product createProduct(Product product) {
+    // Si se proporciona categoryId, validar que exista; si no, permitir null y guardar
+    if (product.getCategoryId() != null) {
         try {
             CategoryDTO category = categoryClient.getCategory(product.getCategoryId());
-            if (category != null && category.getId() != null) {
-                return productRepository.save(product);
-            } else {
+            if (category == null || category.getId() == null) {
                 throw new IllegalArgumentException("Category with id " + product.getCategoryId() + " does not exist");
             }
-            
         } catch (Exception e) {
+            // puedes optar por devolver 400 o guardar sin categoría si prefieres;
+            // aquí devolvemos error para que el usuario sepa que esa categoría no existe
             throw new IllegalArgumentException("Category with id " + product.getCategoryId() + " does not exist or service unavailable: " + e.getMessage());
         }
     }
+    return productRepository.save(product);
+}
+
 
     @Override
     public Product updateProduct(Long id, Product product) {
